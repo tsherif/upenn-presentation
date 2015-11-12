@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">  
+<head>
+  <meta charset="utf-8">
+  <title>The BioDigital Human</title>
+  <link rel="stylesheet" href="css/reveal.min.css">
+  <link rel="stylesheet" href="css/theme/default.css" id="theme"> 
+  <link rel="stylesheet" href="plugin/highlight/styles/docco.css"> 
+  <link rel="icon" type="image/png" href="img/bd-logo.png">
+  <style>
+
+    .reveal .slide-number {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .reveal section img {
+      max-height: 400px;
+    }
+
+    .reveal pre {
+      margin-left: -12%;
+      box-shadow: none;
+      width: 125%;
+    }
+
+    .reveal .me {
+      margin-top: 42px;
+    }
+
+    .reveal ul ul {
+      font-size: 0.8em;
+    }
+
+    #rasterization {
+      height: 300px;
+    }
+
+    iframe {
+      width: 1000px;
+      height: 600px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+      <section>
+        <h1>The BioDigital Human</h1>
+        <h2>Anatomical Storytelling with WebGL</h2>
+        <p>Tarek Sherif</p>
+        <p>BioDigital</p>
+      </section>
+
+      <section>
+        <h3>Goals</h3>
+        <ul>
+          <li>Interactive 3D to make anatomical content engaging</li>
+          <li>
+            Move beyond the anatomy atlas
+            <ul>
+              <li>Tell stories</li>
+              <li>Bring content to life</li>
+              <li>Map data to and from 3D models</li>
+            </ul>
+          </li>
+          <li>Make it widely accessible through the web (including mobile!)</li>
+        </ul>
+      </section>
+
+      <section>
+        <iframe src="https://human.biodigital.com/m/health-conditions/bones,-joints-and-muscles/running-mechanics.html?dk=dc1db956ebbe5c71e7100d9420c7362c9a53535d"></iframe>
+      </section>
+
+      <section>
+        <h3>The BioDigital Human</h3>
+          <ul>
+            <li>
+              3D content library
+              <ul>
+                <li>5000+ anatomy objects</li>
+                <li>500+ health conditions</li>
+              </ul>
+            </li>
+            <li>
+              Rendering engine built on SceneJS
+            </li>
+            <li>User-created annotations and custom views</li>
+            <li>API for embedding Human content into external websites</li>
+          </ul>
+      </section>
+
+      <section>
+        <h3>The BioDigital Human</h3>
+          <ul>
+            <li>
+              Key clients 
+              <ul>
+                <li>Medical device manufacturers</li>
+                <li>Pharmaceutical</li>
+                <li>Educational</li>
+                <li>Medical students</li>
+              </ul>
+            </li>
+          </ul>
+      </section>
+
+      <section>
+        <h3>Content</h3>
+        <ul>
+          <li>Meshes built using Maya and ZBrush</li>
+          <li>Textures: color, normal, specular, alpha</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Content</h3>
+        <ul>
+          <li>Animation:
+            <ul>
+              <li>Tweens on transforms, textures, opacity, etc.</li>
+              <li>Morph targets for more complex animations</li>
+              <li>Linear and Bezier interpolation</li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Content</h3>
+        <ul>
+          <li>Accuracy:
+            <ul>
+              <li>Consult anatomical atlases and texts</li>
+              <li>Collaborate with medical professionals</li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Types of Content</h3>
+        <ul>
+          <li>
+            <a target="_blank" href="https://human.biodigital.com/widgets/duke-stroke-sim/?m=client/Duke/brain_regions.json">Static Content</a>
+          </li>
+          <li>
+            <a target="_blank" href="http://human.biodigital.com/widget?m=client/about/glucose_transport_tour.json&ui-tools=true&ui-panel=true&pre=false">Tween animations</a>
+          </li>
+          <li>
+            <a target="_blank" href="https://preview.biodigital.com/widget/?m=public_preview/whole_beating_healthy_heart.json">Morph targets</a>
+          </li>
+          <li>
+            <a target="_blank" href="http://human.biodigital.com/widget?m=acl_repair&ui-tools=true&ui-panel=false&pre=false">Basic Tours</a>
+          </li>
+          <li>
+            <a target="_blank" href="http://human.biodigital.com/widgets/craniofacial/?m=craniofacial/fronto-orbital_advancement.json&ui-tools=true&ui-panel=true&pre=false">Complex Tours</a>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Content Challenges</h3>
+        <ul>
+          <li>
+            SIZE!
+            <ul>
+              <li>Artists want it beautiful: big textures, detailed geometry</li>
+              <li>We want it to not crash on an iPhone</li>
+              <li>Tension between anatomical accuracy and application stability</li>
+            </ul>
+          </li>
+        </ul> 
+      </section>
+
+      <section>
+        <h3>Content Challenges</h3>
+        <ul>
+          <li>
+            Pipeline issues
+            <ul>
+              <li>Artist (mostly) don't write code</li>
+              <li>Have to map Maya properties or structures to GL variables and GLSL code</li>
+            </ul>
+          </li>
+        </ul> 
+      </section>
+
+      <section>
+        <h3>Example: Maya Ramp Node for Fresnel Effects</h3>
+        <ul>
+          <li>Maya creates Fresnel effects using the general-purpose ramp node</li>
+        </ul> 
+        <img src="img/maya-graph.png">
+        <!-- http://popupasylum.co.uk/wp-content/uploads/2014/05/facingToSnow01.png -->
+        <img src="img/ramp-node.png">
+        <!-- Source: https://knowledge.autodesk.com/support/maya/learn-explore/caas/CloudHelp/cloudhelp/2016/ENU/Maya/files/GUID-6DAAFBCB-C7A8-4431-A49C-6A176136005D-htm.html -->
+      </section>
+
+      <section>
+        <h3>Example: Maya Ramp Node for Fresnel Effects</h3>
+        <ul>
+          <li>Maya ramp node:</li>
+          <ul>
+            <li>Arbitrary gradient with unlimited stops</li>
+            <li>Color inputs can be textures</li>
+            <li>Interpolation factor can be anything</li>
+          </ul>
+        </ul> 
+      </section>
+
+      <section>
+        <h3>Example: Maya Ramp Node for Fresnel Effects</h3>
+        <ul>
+          <li>Standard Fresnel equation</li>
+        </ul> 
+        <pre>
+          <code>
+            float fresnel(eyeVec, worldNormal, color1, color2, bias, scale, power) {
+              float facingRatio = dot(eyeVec, worldNormal);
+              float f = bias + scale * pow(1.0 - facingRatio, power);
+
+              return mix(color1, color2, f);
+            }
+          </code>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Our Solution</h3>
+        <ul>
+          <li>
+            Limit Maya ramp node to:
+            <ul>
+              <li>Two color stops</li>
+              <li>No texture input (might be able to add this later)</li>
+              <li>Interpolation factor limited to facing ratio</li>
+            </ul>
+          </li>
+          <li>
+            Extend fresnel function to accept two biases:
+            <ul>
+              <li>Center and edge biases (map to ramp node color stops)</li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Our Solution</h3>
+        <ul>
+          <li>Maya ramp node</li>
+        </ul>
+        <div>
+          <img src="img/fresnel-graph.jpg">
+          <img src="img/fresnel-ramp.jpg">
+        </div>
+      </section>
+
+      <section>
+        <h3>Our Solution</h3>
+        <ul>
+          <li>SceneJS Fresnel equation</li>
+        </ul> 
+        <pre>
+          <code>
+  float fresnel(vec3 viewDirection, vec3 worldNormal, float edgeBias, float centerBias, float power) {
+      float fr = abs(dot(viewDirection, worldNormal));
+      float finalFr = clamp((fr - edgeBias) / (centerBias - edgeBias), 0.0, 1.0);
+      return pow(finalFr, power);
+  }
+          </code>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Rendering</h3>
+        <ul>
+          <li>
+            Navigating anatomical content is difficult
+            <ul>
+              <li>Deeply nested</li>
+              <li>Hierarchical (Did the user click on arm or hand or finger?)</li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Rendering</h3>
+        <ul>
+          <li>
+            Focus on giving users ways to view, emphasize, interact with information of interest:
+            <ul>
+              <li>Highlight object</li>
+              <li>Highlight region (defined by texture)</li>
+              <li>Dissect (remove an object)</li>
+              <li>Isolate (remove all other objects)</li>
+              <li>Transparency</li>
+              <li>Annotations</li>
+              <li>(+ text, audio, video, etc.)</li>
+            </ul> 
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Example</h3>
+        <a href="https://preview.biodigital.com/widget/?m=public_preview/whole_beating_healthy_heart.json&ui-panel=false" target="_blank">The Human Heart</a>
+      </section>
+
+      <section>
+        <h3>Rendering</h3>
+        <ul>
+          <li>
+            Some things are simple:
+            <ul>
+              <li>Highlight object: pick object, blend with highlight color in the fragment shader</li>
+            </ul> 
+          </li>
+          <li>
+            Some things are less so:
+            <ul>
+              <li>Annotations: map 3D point to 2D canvas position, manipulate DOM elements, check occlusion, follow morphing geometry</li>
+            </ul> 
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Rendering Challenges</h3>
+        <ul>
+          <li>
+            Mobile!
+            <ul>
+              <li>Rendering performance and memory can be severely limited on mobile devices</li>
+              <li>
+                Possible to query some properties:
+                <ul>
+                  <li>Variable limits (uniforms, varyings, texture units)</li>
+                  <li>Shader precision</li>
+                </ul>
+              </li>
+              <li>
+                Not others:
+                <ul>
+                  <li>GPU memory</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Rendering Challenges</h3>
+        <ul>
+          <li>ARGGGH... APPLE!!!</li>
+        </ul>
+        <div>
+          <img src="img/ios-limits.png">
+        </div>
+      </section>
+
+      <section>
+        <h3>Working with mobile</h3>
+        <ul>
+          <li>
+            Shader Precision
+            <ul>
+              <li>On desktop <b>mediump</b> and <b>highp</b> tend to be the same</li>
+              <li>On mobile, not so</li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Shader Precision</h3>
+        <ul>
+          <li>
+            SceneJS used to set float precision to <b>mediump</b> in both the vertex and fragment shaders
+          </li>
+        </ul>
+        <pre>
+          <code>
+              precision mediump float;
+          </code>
+        </pre>
+      </section>
+
+      <section>
+        <h3>Shader Precision</h3>
+        <ul>
+          <li>
+            Result
+          </li>
+        </ul>
+        <div>
+          <img src="img/iosgpubug.png">
+        </div>
+      </section>
+
+      <section>
+        <h3>Working with mobile</h3>
+        <ul>
+          <li>
+            Variable Limits
+            <ul>
+              <li>Hardest limit to deal with so far is the limit on varyings (8!)</li>
+              <li>Limit on texture units (8 again!) uncovered a bug in SceneJS bookkeeping</li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Variable limits: Varyings</h3>
+        <ul>
+          <li>
+            SceneJS used to calculate the light vector and distance for each light in the vertex shader, pass to fragment shader in a varying
+          </li>
+          <li>Not hard to hit limit of 8 when using multiple lights</li>
+        </ul>
+        <pre>
+          <code>
+        SCENEJS_vViewLightVecAndDist0 = vec4(tmpVec3, length(SCENEJS_uLightPos0 - worldVertex.xyz));
+        
+        // ...
+        
+        SCENEJS_vViewLightVecAndDist1 = vec4(tmpVec3, length(SCENEJS_uLightPos1 - worldVertex.xyz));
+          </code>
+        </pre>
+      </section>
+
+      <section>
+        <h3>Variable limits: Texture units</h3>
+        <ul>
+          <li>
+            SceneJS used to cycle through texture units for binding, assuming there would always be at least 10
+          </li>
+        </ul>
+        <pre>
+          <code>
+        if (frameCtx.textureUnit > 10) {
+            frameCtx.textureUnit = 0;    
+        }
+          </code>
+        </pre>
+      </section>
+
+      <section>
+        <h3>Solution</h3>
+        <ul>
+          <li>Know the client!</li>
+        </ul>
+        <pre>
+          <code>
+        SceneJS.WEBGL_INFO.MAX_VARYING_VECTORS = gl.getParameter(gl.MAX_VARYING_VECTORS);
+        SceneJS.WEBGL_INFO.MAX_TEXTURE_UNITS =  gl.getParameter(gl.MAX_COMBINED_TEXTURE_IMAGE_UNITS);
+
+        if (gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT).precision > 0) {
+            SceneJS.WEBGL_INFO.FS_MAX_FLOAT_PRECISION = "highp";
+        } else if (gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.MEDIUM_FLOAT).precision > 0) {
+            SceneJS.WEBGL_INFO.FS_MAX_FLOAT_PRECISION = "mediump";
+        } else {
+            SceneJS.WEBGL_INFO.FS_MAX_FLOAT_PRECISION = "lowp";
+        }
+          </code>
+        </pre>
+      </section>
+
+      <section>
+        <h3>Solution</h3>
+        <ul>
+          <li>Use that knowledge!</li>
+        </ul>
+        <pre>
+          <code>
+        frameCtx.textureUnit = (frameCtx.textureUnit + 1) % SceneJS.WEBGL_INFO.MAX_TEXTURE_UNITS;
+          </code>
+        </pre>
+        <pre>
+          <code>
+        var src = [
+          "precision " + SceneJS.WEBGL_INFO.FS_MAX_FLOAT_PRECISION + " float;"
+        ];
+          </code>
+        </pre>
+      </section>
+
+      <section>
+        <h3>Solution</h3>
+        <ul>
+          <li>For the varyings, we moved light vector calculations to the fragment shader</li>
+          <li>Arguably less performant, but our tests show the effect to be negligible in practice</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Human API</h3>
+        <ul>
+          <li>
+            Embed Human content in an external web page through an iFrame
+          </li>
+          <li>
+            Basic interactions built-in
+            <ul>
+              <li>Mouse movement</li>
+              <li>Dissection, highlight, annotate, etc.</li>
+            </ul>
+          </li>
+          <li>UI can be customized through URL parameters</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Human API</h3>
+        <ul>
+          <li>
+            For more customized interactions, use the JavaScript API
+          </li>
+        </ul>
+        <pre>
+          <code>
+              var human = new HumanAPI.Human("iFrameID"); 
+
+              human.timeline.pause(); 
+
+              human.camera.flyTo({
+                  eye: { z: -25 },
+                  velocity: 20
+              });
+          </code>
+        </pre>
+      </section>
+
+      <section>
+        <h3>Example</h3>
+        <ul>
+          <li><a target="_blank" href="http://conditions.about.com/cc/type2diabetes/overview/signs-symptoms/signs_intro">About.com Diabetes Page</a></li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Visit the new Dev Portal!</h3>
+        <ul>
+          <li>
+            <a target="_blank" href="https://developer.biodigital.com">https://developer.biodigital.com</a>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h1>Thanks!</h1>
+        <ul>
+          <li><a href="mailto:tarek@biodigital.com">tarek@biodigital.com</a></li>
+          <li><a target="_blank" href="https://twitter.com/thsherif">@thsherif</a></li>
+          <li><a target="_blank" href="https://www.biodigital.com">www.biodigital.com</a></li>
+        </ul>
+      </section>
+    </div>
+  </div>
+  <script src="lib/js/head.min.js"></script>
+  <script src="js/reveal.min.js"></script>
+  <script src="js/highlight.min.js"></script>
+  <script>
+    Reveal.initialize({
+      transition: "none",
+      history: true,
+      slideNumber: true,
+      controls: false
+    });
+
+    hljs.initHighlightingOnLoad();
+    
+  </script>
+</body>
+</html>
