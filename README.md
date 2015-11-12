@@ -1,1 +1,1 @@
-BioDigital Human Presentation for SIGGRAPH, August 2015.
+BioDigital Human Presentation for UPenn, November 2015.
