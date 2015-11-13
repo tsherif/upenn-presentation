@@ -47,8 +47,8 @@
   <div class="reveal">
     <div class="slides">
       <section>
-        <h1>The BioDigital Human</h1>
-        <h2>Anatomical Storytelling with WebGL</h2>
+        <h1>WebGL in Production</h1>
+        <h2>Content, Rendering and Integration in the BioDigital Human</h2>
         <p>Tarek Sherif</p>
         <p>BioDigital</p>
       </section>
@@ -107,6 +107,142 @@
       </section>
 
       <section>
+        <h3>Why WebGL?</h3>
+        <ul>
+          <li>
+            Pros:
+            <ul>
+              <li>
+                It's everywhere!
+                <ul>
+                  <li>(Isn't it?)</li>
+                </ul>
+              </li>
+              <li>Use HTML/CSS/JavaScript for easy UI</li>
+              <li>Integrate into client web sites</li>
+              <li>Leverage existing web services</li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Why WebGL?</h3>
+        <ul>
+          <li>
+            Cons:
+            <ul>
+              <li>
+                It's everywhere!
+                <ul>
+                  <li>As long as you make it work!</li>
+                </ul>
+              </li>
+              <li>
+                JavaScript!!!
+                <ul>
+                  <li>Common JS patterns are bad for performance</li>   
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <pre>
+          <code>
+            object.transform({
+              rotate: {
+                axis: vec1.cross(vec2).normalize(),
+                angle: Math.PI / 4
+              } 
+            })
+          </code>
+        </ul>
+      </section>
+
+      <section>
+        <h3>WebGL in Production</h3>
+        <ul>
+          <li>The pipeline</li>
+        </ul>
+        <img src="img/pipeline.png">
+      </section>
+
+      <section>
+        <h3>WebGL in Production</h3>
+        <ul>
+          <li>Artists create models and animate them</li>
+        </ul>
+        <img src="img/pipeline-content.png">
+      </section>
+
+       <section>
+        <h3>WebGL in Production</h3>
+        <ul>
+          <li>
+            Export tool converts modeling format to runtime format that the WebGL engine can use efficiently
+            <ul>
+              <li>Meshes as binary arrays</li>
+              <li>Shader graphs as materials with known properties</li>
+              <li>Animations as transforms and morph targets</li>
+            </ul>
+          </li>
+        </ul>
+        <img src="img/pipeline-export.png">
+      </section>
+
+      <section>
+        <h3>WebGL in Production</h3>
+        <ul>
+          <li>WebGL!!!</li>
+        </ul>
+        <img src="img/pipeline-engine.png">
+      </section>
+
+      <section>
+        <h3>WebGL in Production</h3>
+        <ul>
+          <li>Deploy engine and content to our severs making them available to everyone</li>
+        </ul>
+        <img src="img/pipeline-deploy.png">
+      </section>
+
+      <section>
+        <h3>WebGL in Production</h3>
+        <ul>
+          <li>Embed an iFrame with Human content in your page</li>
+        </ul>
+        <img src="img/pipeline-integrate.png">
+      </section>
+
+      <section>
+        <h3>WebGL in Production</h3>
+        <ul>
+          <li>Manipulate scene in the iFrame through a JavaScript API</li>
+        </ul>
+        <img src="img/pipeline-api.png">
+      </section>
+
+      <section>
+        <h3>WebGL in Production</h3>
+        <ul>
+          <li>
+            Key challenges:
+            <ul>
+              <li>Content must be downloaded so its size should be limited</li>
+              <li>
+                Running ubiquitously means dealing with limitations of low-end devices:
+                <ul>
+                  <li>Memory and GPU limitations</li>
+                  <li>Amplifies importance of optimization</li>
+                  <li>But don't want to sacrifice quality on capable devices!</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <section>
         <h3>Content</h3>
         <ul>
           <li>Meshes built using Maya and ZBrush</li>
@@ -143,7 +279,7 @@
         <h3>Types of Content</h3>
         <ul>
           <li>
-            <a target="_blank" href="https://human.biodigital.com/widgets/duke-stroke-sim/?m=client/Duke/brain_regions.json">Static Content</a>
+            <a target="_blank" href="https://human.biodigital.com/widgets/duke-stroke-sim/?m=client/Duke/brain_regions.json">Static content</a>
           </li>
           <li>
             <a target="_blank" href="http://human.biodigital.com/widget?m=client/about/glucose_transport_tour.json&ui-tools=true&ui-panel=true&pre=false">Tween animations</a>
@@ -152,10 +288,10 @@
             <a target="_blank" href="https://preview.biodigital.com/widget/?m=public_preview/whole_beating_healthy_heart.json">Morph targets</a>
           </li>
           <li>
-            <a target="_blank" href="http://human.biodigital.com/widget?m=acl_repair&ui-tools=true&ui-panel=false&pre=false">Basic Tours</a>
+            <a target="_blank" href="http://human.biodigital.com/widget?m=acl_repair&ui-tools=true&ui-panel=false&pre=false">Basic tours</a>
           </li>
           <li>
-            <a target="_blank" href="http://human.biodigital.com/widgets/craniofacial/?m=craniofacial/fronto-orbital_advancement.json&ui-tools=true&ui-panel=true&pre=false">Complex Tours</a>
+            <a target="_blank" href="http://human.biodigital.com/widgets/craniofacial/?m=craniofacial/fronto-orbital_advancement.json&ui-tools=true&ui-panel=true&pre=false">Complex tours</a>
           </li>
         </ul>
       </section>
@@ -167,8 +303,8 @@
             SIZE!
             <ul>
               <li>Artists want it beautiful: big textures, detailed geometry</li>
-              <li>We want it to not crash on an iPhone</li>
-              <li>Tension between anatomical accuracy and application stability</li>
+              <li>Engineers want it to not crash on an iPhone</li>
+              <li>Tension between anatomical detail and application stability</li>
             </ul>
           </li>
         </ul> 
@@ -180,7 +316,7 @@
           <li>
             Pipeline issues
             <ul>
-              <li>Artist (mostly) don't write code</li>
+              <li>Artists (mostly) don't write code</li>
               <li>Have to map Maya properties or structures to GL variables and GLSL code</li>
             </ul>
           </li>
@@ -281,7 +417,7 @@
             Navigating anatomical content is difficult
             <ul>
               <li>Deeply nested</li>
-              <li>Hierarchical (Did the user click on arm or hand or finger?)</li>
+              <li>Hierarchical (did the user click on arm or hand or finger?)</li>
             </ul>
           </li>
         </ul>
@@ -406,7 +542,7 @@
         <h3>Working with mobile</h3>
         <ul>
           <li>
-            Variable Limits
+            Variable limits
             <ul>
               <li>Hardest limit to deal with so far is the limit on varyings (8!)</li>
               <li>Limit on texture units (8 again!) uncovered a bug in SceneJS bookkeeping</li>
@@ -458,7 +594,7 @@
         <pre>
           <code>
         SceneJS.WEBGL_INFO.MAX_VARYING_VECTORS = gl.getParameter(gl.MAX_VARYING_VECTORS);
-        SceneJS.WEBGL_INFO.MAX_TEXTURE_UNITS =  gl.getParameter(gl.MAX_COMBINED_TEXTURE_IMAGE_UNITS);
+        SceneJS.WEBGL_INFO.MAX_TEXTURE_UNITS   = gl.getParameter(gl.MAX_COMBINED_TEXTURE_IMAGE_UNITS);
 
         if (gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT).precision > 0) {
             SceneJS.WEBGL_INFO.FS_MAX_FLOAT_PRECISION = "highp";
@@ -520,17 +656,22 @@
         <ul>
           <li>
             For more customized interactions, use the JavaScript API
+            <ul>
+              <li>Communicates with iFrame using the window messaging API</li>
+            </ul>
           </li>
         </ul>
         <pre>
           <code>
               var human = new HumanAPI.Human("iFrameID"); 
 
-              human.timeline.pause(); 
-
               human.camera.flyTo({
                   eye: { z: -25 },
                   velocity: 20
+              });
+
+              human.pick.on("picked", function(e) {
+                console.log(e.worldPos);
               });
           </code>
         </pre>
@@ -544,6 +685,22 @@
       </section>
 
       <section>
+        <h3>API Challenges</h3>
+        <ul>
+          <li>Communication!</li>
+          <li>Documentation, tutorials, support</li>
+          <li>
+            Want to make everything we've discussed approachable to the average web developer
+            <ul>
+              <li>3D navigation concepts</li>
+              <li>Anatomical concepts</li>
+              <li>Architecture of the Human</li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <section>
         <h3>Get involved!</h3>
         <ul>
           <li>
@@ -551,7 +708,7 @@
             <a target="_blank" href="https://developer.biodigital.com">https://developer.biodigital.com</a>
           </li>
           <li>
-            BioDigital summer internship program!
+            BioDigital summer internships!
           </li>
         </ul>
       </section>
@@ -571,7 +728,7 @@
   <script src="js/highlight.min.js"></script>
   <script>
     Reveal.initialize({
-      transition: "none",
+      //transition: "none",
       history: true,
       slideNumber: true,
       controls: false
